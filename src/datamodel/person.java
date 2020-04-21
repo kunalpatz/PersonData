@@ -1,3 +1,5 @@
+package datamodel;
+
 public class person {
     private String name;
     private String sex;
