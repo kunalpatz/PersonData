@@ -1,11 +1,11 @@
-package launcher.tests.sandbox;
+package launcher;
 
-import datamodel.person;
+import datamodel.Person;
 
 public class launcher_mincode {
 
     public static void main(String[] args) {
-        person person1 = new person();
+        Person person1 = new Person();
         //person1.add("Alex");
         //person1.add("M");
         //person1.add(41);

@@ -1,5 +1,5 @@
 package services;
-import datamodel.person;
+import datamodel.Person;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PersonCSVHandler {
 
-    public static List<person> readFromFile(String fileLocation) throws IOException {
+    public static List<Person> readFromFile(String fileLocation) throws IOException {
 
         List<String> rawPersons = Files.readAllLines(new File(fileLocation).toPath());
 
@@ -20,22 +20,21 @@ public class PersonCSVHandler {
         rawPersons.remove(0);
         //System.out.println("after removal");
         //System.out.println();
-        List<person> persons= new ArrayList<>();
+        List<Person> persons= new ArrayList<>();
         for (String line : rawPersons) {
             //System.out.println(line);
             String[] parts = line.split(",");
             //System.out.println(Arrays.asList(parts));
 
 
-            person Person = new person();
-            Person.setName(parts[0]);
-            Person.setSex(parts[1]);
-            Person.setAge(Integer.valueOf(parts[2].strip()));
-            Person.setHeight(Integer.valueOf(parts[3].strip()));
-            Person.setWeight(Integer.valueOf(parts[4].strip()));
-            persons.add(Person);
+            Person person = new Person();
+            person.setName(parts[0]);
+            person.setSex(parts[1]);
+            person.setAge(Integer.valueOf(parts[2].strip()));
+            person.setHeight(Integer.valueOf(parts[3].strip()));
+            person.setWeight(Integer.valueOf(parts[4].strip()));
+            persons.add(person);
 
-            //System.out.println(persons);
         }
         return persons;
     }

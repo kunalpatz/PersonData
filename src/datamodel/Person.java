@@ -1,6 +1,6 @@
 package datamodel;
 
-public class person {
+public class Person {
     private String name;
     private String sex;
     private Integer age;
@@ -17,15 +17,11 @@ public class person {
     }
 
     public String getSex() {
-        return sex;
+        return this.sex;
     }
 
     public void setSex(String sex) {
-        if (sex.equals("M")){
-            this.sex="Male";
-        }
-        else
-            this.sex = "Female";
+        this.sex = sex;
     }
 
     public Integer getAge() {
@@ -52,4 +48,8 @@ public class person {
         this.weight = weight;
     }
 
+    public String toString() {
+        return "Person [name=" + name + ", sex=" + sex + ", age=" + age + ", height=" + height + ", weight=" + weight
+                + "]";
+    }
 }

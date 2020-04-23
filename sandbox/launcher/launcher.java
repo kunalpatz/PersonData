@@ -1,12 +1,12 @@
-package launcher.tests.sandbox;
+package launcher;
 
-import datamodel.person;
+import datamodel.Person;
 
 import java.util.ArrayList;
 
 public class launcher {
     public static void main(String[] args) {
-        person data = new person();
+        Person data = new Person();
         ArrayList<ArrayList<Object>> personData = new ArrayList<ArrayList<Object>>(5);
 
         ArrayList<Object> person1 = new ArrayList<Object>();
