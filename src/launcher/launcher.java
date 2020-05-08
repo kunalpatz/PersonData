@@ -1,119 +1,84 @@
 package launcher;
+
+// encoding data by sex
+/*
+M --> 0
+F --> 1
+ */
+
 import datamodel.Person;
 import services.PersonCSVHandler;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class launcher {
-
-    private static final String FILE_LOCATION = "persons.csv";
-
     public static void main(String[] args) throws IOException {
-        List<Person> persons = PersonCSVHandler.readFromFile(FILE_LOCATION);
 
-        System.out.println("\n1. Average calculated by map and reduce");
-        CalculateAverageAge(persons);
+        List<Person> readFromFile = PersonCSVHandler.readFromFile("persons.csv");
 
-        System.out.println("\n2. Calculation of Median of Feature Age");
-        CalculateMedian(persons);
+        Map<String, Integer> index = new LinkedHashMap<>();
+        List<Person> indexedList = readFromFile.stream().peek(p -> {
+            Integer currentValue = index.get(p.getSex());
+            if (currentValue == null) {
+                currentValue = index.size() + 1;
+                index.put(p.getSex(), currentValue);
+            }
+            p.setIndexbySex(currentValue);
+        }).collect(Collectors.toList());
 
-        System.out.println("\n3. Calculation of Deciles for Feature Age");
-        CalculateDeciles(persons);
+        //System.out.println(indexedList);
 
-        System.out.println("\n4. Group person based on gender");
-        GroupByGender(persons);
+        Integer[][] matrix = indexedList
+                .stream()
+                .map(p -> new Integer[]{p.getIndexbySex(), p.getAge(),
+                        p.getHeight(), p.getWeight()})
+                .collect(Collectors.toList())
+                .toArray(new Integer[0][]);
+        //System.out.println(numericalList);
+
+
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+
+        //DONE reconstruct back the list of person from the double matrix
+        List<Person> output = new ArrayList<>();
+        for(Integer[] row : matrix) {
+            Person foundPerson = readFromFile
+                    .stream()
+                    .filter(person ->
+                        person.getSex().equals(row[0] == 1 ? "M" : "F")
+                            && person.getAge().equals(row[1])
+                            && person.getHeight().equals(row[2])
+                            && person.getWeight().equals(row[3])
+                     )
+                    .findAny()
+                    .get();
+            output.add(foundPerson);
+            //System.out.println(foundPerson);
+        }
+        System.out.println(output);
+
+
+        //BLOCK END
 
     }
 
-    public static void GroupByGender(List<Person> persons) {
-        List<Object> male = new ArrayList<>();  // create a separate list for males and females
-        List<Object> female = new ArrayList<>();
-        String ref = persons.get(0).getSex();   // reference for comparison and grouping in for loop
-
-        for (int i = 0; i < persons.size(); i++){
-            String sex = persons.get(i).getSex();
-            if (sex.equals(ref)){
-                male.add(String.valueOf(persons.get(i)));
-            } else {
-                female.add(String.valueOf(persons.get(i)));
+    private static String resolvedByValue(Map<String, Integer> map, Integer integer) {
+        Set<Map.Entry<String, Integer>> entrySet = map.entrySet();
+        for (Map.Entry<String, Integer> entry : entrySet) {
+            if (entry.getValue().equals(integer)) {
+                return entry.getKey();
             }
         }
-        System.out.println(male);
-        System.out.println(female);
+
+        return null;
     }
-
-
-    public static void CalculateDeciles(List<Person> persons) {
-        // Decile(i) = i * ((n+1)/10)
-        int n = persons.size();                         // Size of provided list
-        List<Integer> ages = new ArrayList<>();
-
-        for (int i = 0; i < n; i++){
-            ages.add(persons.get(i).getAge());          //creating separate list for age
-        }
-        Collections.sort(ages);
-        List<Double> Deciles = new ArrayList<>();
-
-        double tenthData = (double) (n + 1) / 10;       // value of (n+1)/10
-
-        for (int i = 1; i <= 9; i++){
-            double decile = i*tenthData;                //Value of D(i)
-            int position = (int) decile - 1;            // Index of element in list for which D(i) lies
-
-            /* pos(n)
-                    + (difference between pos(n) and decile value)
-                    * (difference between pos(n+1) and pos(n))
-            */
-            Double value = ages.get(position)
-                    + ((decile - (int) decile)
-                    * (ages.get(position+1) - ages.get(position)));
-            Deciles.add(value);
-        }
-        System.out.println(Deciles);
-    }
-
-
-    public static void CalculateMedian(List<Person> persons) {
-        int size = persons.size();          // length of provided data list
-        List<Integer> ages = new ArrayList<>();
-
-        for (int i =0; i < size; i++){
-            ages.add(persons.get(i).getAge());
-        }
-
-        Collections.sort(ages);
-        double median = ((double) size + 1) / 2;    // {(n+1)/2} th position in list
-
-        /*
-        If
-         */
-        if (((int) median == median)){
-            Integer medianAge = ages.get((int) median -1);
-            System.out.println(medianAge);
-        } else{
-            Double medianAge = (Double.valueOf(ages.get((int) median -1))
-                    + Double.valueOf(ages.get((int) median))) / 2;
-            System.out.println(medianAge);
-        }
-    }
-
-
-    public static void CalculateAverageAge(List<Person> persons) {
-        int ageSum = 0;
-        for (Person person: persons){
-            ageSum = ageSum + person.getAge();
-        }
-        int size = persons.size();
-        double averageAge = (double) ageSum / (double) size;
-
-        int AverageAgeAsInt = ageSum / persons.size();
-
-        System.out.println("AverageAge :" + averageAge);
-        System.out.println("AverageAge in Int:" + AverageAgeAsInt);
-    }
-
 }
-

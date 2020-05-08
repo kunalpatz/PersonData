@@ -3,10 +3,18 @@ package datamodel;
 public class Person {
     private String name;
     private String sex;
+    private Integer indexbySex;
     private Integer age;
     private Integer height;
     private Integer weight;
 
+    public Integer getIndexbySex() {
+        return indexbySex;
+    }
+
+    public void setIndexbySex(Integer indexbySex) {
+        this.indexbySex = indexbySex;
+    }
 
     public String getName() {
         return name;
@@ -49,7 +57,7 @@ public class Person {
     }
 
     public String toString() {
-        return "Person [name=" + name + ", sex=" + sex + ", age=" + age + ", height=" + height + ", weight=" + weight
+        return "Person [name=" + name + ", sex=" + sex + ", index=" + indexbySex + ", age=" + age + ", height=" + height + ", weight=" + weight
                 + "]";
     }
 }

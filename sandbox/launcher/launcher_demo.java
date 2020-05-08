@@ -10,10 +10,10 @@ import java.util.OptionalDouble;
 
 public class launcher_demo {
 
-    private static final String FILE_LOCATION = "persons.csv";
+    private static final String FILE_LOCATION = "personsTest.csv";
 
     public static void main(String[] args) throws IOException {
-        //List<String> rawPersons = Files.readAllLines(new File("src/persons.csv").toPath());
+        //List<String> rawPersons = Files.readAllLines(new File("src/personsTest.csv").toPath());
         List<Person> persons = PersonCSVHandler.readFromFile(FILE_LOCATION);
 
         //Functional API
